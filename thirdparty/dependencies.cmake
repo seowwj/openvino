@@ -310,7 +310,7 @@ if(ENABLE_SAMPLES OR ENABLE_TESTS OR ENABLE_INTEL_NPU_INTERNAL)
     ov_developer_package_export_targets(
         TARGET gflags
         INSTALL_INCLUDE_DIRECTORIES "${CMAKE_BINARY_DIR}/thirdparty/gflags/gflags/include/gflags"
-        INSTALL_DESTIONATION "developer_package/include/gflags")
+        INSTALL_DESTINATION "developer_package/include/gflags")
 endif()
 
 #
