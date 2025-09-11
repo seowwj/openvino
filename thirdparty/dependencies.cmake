@@ -453,6 +453,40 @@ if(ENABLE_OV_TF_LITE_FRONTEND)
     set(flatbuffers_INCLUDE_DIRECTORIES $<TARGET_PROPERTY:${flatbuffers_LIBRARY},INTERFACE_INCLUDE_DIRECTORIES>)
 endif()
 
+if(ENABLE_INTEL_NPU)
+    if(ANDROID)
+        set(FLATBUFFERS_BUILD_FLATC OFF)
+    endif()
+
+    # If not specified, default to building flatc
+    if(NOT DEFINED FLATBUFFERS_BUILD_FLATC)
+        set(FLATBUFFERS_BUILD_FLATC ON)
+    endif()
+
+    add_subdirectory(thirdparty/flatbuffers EXCLUDE_FROM_ALL)
+
+    # Ensure flatc executable is built by default (flatbuffers added with EXCLUDE_FROM_ALL)
+    if(TARGET flatc)
+        add_custom_target(build_flatc ALL DEPENDS flatc)
+    endif()
+
+    ov_developer_package_export_targets(
+        TARGET FlatBuffers
+        INSTALL_INCLUDE_DIRECTORIES
+            ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/flatbuffers/flatbuffers/include/
+        INSTALL_DESTIONATION "developer_package/include/flatbuffers")
+    
+    # Export flatc binary location if available
+    if(TARGET flatc)
+        message(STATUS "flatc compiler target available: $<TARGET_FILE:flatc>")
+        # Install flatc into developer package tools directory
+        install(TARGETS flatc
+                RUNTIME DESTINATION developer_package/tools
+                COMPONENT ${OV_CPACK_COMP_CORE_DEV}
+                ${OV_CPACK_COMP_CORE_DEV_EXCLUDE_ALL})
+    endif()
+endif()
+
 #
 # Snappy Compression
 #
