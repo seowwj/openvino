@@ -108,7 +108,7 @@ endmacro()
 ov_clean_developer_package_targets()
 
 function(ov_developer_package_export_targets)
-    cmake_parse_arguments(EXPORT "" "TARGET;INSTALL_DESTIONATION" "INSTALL_INCLUDE_DIRECTORIES" ${ARGN})
+    cmake_parse_arguments(EXPORT "" "TARGET;INSTALL_DESTINATION" "INSTALL_INCLUDE_DIRECTORIES" ${ARGN})
 
     # to allow exporting of aliased targets with the original names
     if(TARGET "${EXPORT_TARGET}")
@@ -120,15 +120,15 @@ function(ov_developer_package_export_targets)
         list(APPEND _OPENVINO_DEVELOPER_PACKAGE_TARGETS ${EXPORT_TARGET})
 
         if(EXPORT_INSTALL_INCLUDE_DIRECTORIES)
-            if(NOT EXPORT_INSTALL_DESTIONATION)
-                set(EXPORT_INSTALL_DESTIONATION "developer_package/include/${EXPORT_TARGET}")
+            if(NOT EXPORT_INSTALL_DESTINATION)
+                set(EXPORT_INSTALL_DESTINATION "developer_package/include/${EXPORT_TARGET}")
             endif()
 
-            target_include_directories(${EXPORT_TARGET} INTERFACE "$<INSTALL_INTERFACE:${EXPORT_INSTALL_DESTIONATION}>")
+            target_include_directories(${EXPORT_TARGET} INTERFACE "$<INSTALL_INTERFACE:${EXPORT_INSTALL_DESTINATION}>")
 
             foreach(install_dir IN LISTS EXPORT_INSTALL_INCLUDE_DIRECTORIES)
                 install(DIRECTORY "${install_dir}"
-                        DESTINATION "${EXPORT_INSTALL_DESTIONATION}"
+                        DESTINATION "${EXPORT_INSTALL_DESTINATION}"
                         COMPONENT developer_package EXCLUDE_FROM_ALL)
             endforeach()
         endif()
